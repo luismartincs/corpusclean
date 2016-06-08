@@ -28,6 +28,32 @@ class CorpusUtils:
          self.global_headers.append(line.replace('\n', ''))
       print "Cargando encabezados"
 
+
+   def generateIMCSV(self,filesarr):
+
+      writer = csv.writer(open("IM.csv", 'wb'))
+
+      headers_row = list(self.global_headers)
+      headers_row.insert(0,"Document")
+      writer.writerow(headers_row)
+
+      i = 0
+      while(i < len(inputs)):
+         new_row = []
+         new_row.append(filesarr[i])
+
+         self.readCSVToDictionary(filesarr[i])
+         #print "ROW\n\n"
+         for header in self.global_headers:
+            if header not in self.word_list:
+               #print "se agrega con incidencia 0"
+               self.word_list[header] = 0
+
+            new_row.append(self.word_list[header])
+            #print ("%s:%s" % (header,self.word_list[header]))
+         writer.writerow(new_row)
+         i = i+1
+
    def analyze(self,inputf,outputf):
       self.input_file = inputf
       self.output_file = outputf
@@ -79,20 +105,20 @@ class CorpusUtils:
       for key, value in self.word_list.items():
          writer.writerow([key, value])
 
-   def readCSVToDictionary(self):
-      reader = csv.reader(open('dict.csv', 'rb'))
+   def readCSVToDictionary(self,filename):
+      reader = csv.reader(open(filename, 'rb'))
       self.word_list = dict(reader)
 
 
 cu = CorpusUtils()
 inputs = ["data1.txt","data2.txt","data3.txt"]
-outputs = ["c1.txt","c2.txt","c3.txt"]
-
+outputs = ["c1.csv","c2.csv","c3.csv"]
+'''
 i = 0
 
 while(i < len(inputs)):
    cu.analyze(inputs[i],outputs[i])
    i = i+1
-
-
+'''
+cu.generateIMCSV(outputs)
 
